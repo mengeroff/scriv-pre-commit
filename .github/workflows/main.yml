@@ -1,0 +1,31 @@
+name: main
+on:
+  schedule:
+    - cron: "0 */4 * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [pypi_release]
+
+jobs:
+  build:
+    name: main
+    runs-on: ubuntu-latest
+    steps:
+      - if: ${{ startsWith(github.event_name, 'repository_dispatch') }}
+        run: sleep 30
+
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - run: pip install pre-commit-mirror-maker
+
+      - name: set git config
+        run: |
+          git config user.name 'Github Actions'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      - run: pre-commit-mirror --language python --package-name scriv --entry 'scriv create' --id scriv --types-or python --types-or pyi --require-serial --description "Run 'scriv' the chnagelog management tool" .
+
+      - run: git push origin HEAD:refs/heads/main --tags
