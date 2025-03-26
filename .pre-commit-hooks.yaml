@@ -1,6 +1,6 @@
 -   id: scriv
     name: scriv
-    description: "Run 'scriv' the changelog management tool"
+    description: "Run 'scriv' the chnagelog management tool"
     entry: scriv create
     language: python
     'types_or': [python, pyi]
